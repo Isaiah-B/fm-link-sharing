@@ -60,6 +60,11 @@ export const GlobalStyle = createGlobalStyle`
     line-height: 150%;
   }
 
+  p {
+    ${BodyM};
+    color: var(--grey);
+  }
+  
   input {
     border: none;
     background: none;

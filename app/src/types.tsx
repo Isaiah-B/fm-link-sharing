@@ -11,3 +11,9 @@ export interface LinkItemType {
   site: PlatformType,
   link: string,
 }
+
+export interface AuthCredentials {
+  email: string,
+  password: string,
+  passwordConfirm?: string,
+}

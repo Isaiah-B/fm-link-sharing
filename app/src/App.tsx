@@ -13,9 +13,10 @@ function App() {
     <Container>
       <Routes>
         <Route index element={<PageMain />} />
-        <Route path='/login' element={<LoginPage />} />
-        <Route path='/signup' element={<SignupPage />} />
-        <Route path='/preview' element={<PagePreview />} />
+        <Route path='login' element={<LoginPage />} />
+        <Route path='signup' element={<SignupPage />} />
+        <Route path='preview' element={<PagePreview />} />
+        <Route path='*' element={<h1>Nothing here!</h1>} />
       </Routes>
     </Container>
   );

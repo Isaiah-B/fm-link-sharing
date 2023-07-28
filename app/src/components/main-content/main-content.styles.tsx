@@ -8,11 +8,6 @@ export const ContentHeader = styled.div`
     font-weight: 700;
     margin-bottom: 0.8rem;
   }
-
-  p {
-    ${BodyM};
-    color: var(--grey);
-  }
 `;
 
 // Make content scrollable when it overflows parent

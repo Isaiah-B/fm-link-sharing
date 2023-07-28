@@ -31,4 +31,3 @@ export const MockupState = atom<MockupProps>({
     email: '',
   }
 });
-
