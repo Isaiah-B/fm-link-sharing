@@ -13,15 +13,16 @@ import {
   AuthFormContainer,
   AuthFormHeader,
   AuthNavigate,
+  ErrorSection,
   FormFields,
 } from './auth-forms.styles';
 
-export default function SignupForm(
-  { handleSignup }: {
-    handleSignup: (event: React.FormEvent, credentials: AuthCredentials) => void
+export default function SignupForm (
+  { handleSignup, error }: {
+    handleSignup: (event: React.FormEvent, credentials: AuthCredentials) => void,
+    error: string | undefined,
   }
 ) {
-
   const [credentials, setCredentials] = useState<AuthCredentials>({
     email: '',
     password: '',
@@ -76,6 +77,16 @@ export default function SignupForm(
       </FormFields>
 
       <ButtonPrimary type='submit'>Create new account</ButtonPrimary>
+
+      {
+        error
+          ? (
+            <ErrorSection>
+              {error}
+            </ErrorSection>
+          )
+          : null
+      }
 
       <AuthNavigate>
         <p>

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { BodyS } from '../..';
 
 export const AuthFormContainer = styled.form`
   display: flex;
@@ -25,6 +26,13 @@ export const FormFields = styled.div`
   gap: 2.4rem;
 
   margin-bottom: 2.4rem;
+`;
+
+export const ErrorSection = styled.div`
+  margin-bottom: 2rem;
+  
+  ${BodyS};
+  color: var(--red);
 `;
 
 export const AuthNavigate = styled.div`

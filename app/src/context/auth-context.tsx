@@ -1,11 +1,10 @@
 import { createContext, useState } from 'react';
+import Cookies from 'universal-cookie';
 import { auth } from '../firebase';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
-import Cookies from 'universal-cookie';
-
-import handleAuthErrors from '../utils/handleAuthErrors';
 
 import { AuthCredentials } from '../types';
+import { FirebaseError } from 'firebase/app';
 
 interface AuthContextType {
   user: string | null,
@@ -31,16 +30,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const createUser = async (credentials: AuthCredentials) => {
     const { email, password } = credentials;
 
-    
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const accessToken = await userCredential.user.getIdToken();
 
       cookies.set('token', accessToken);
       setUser(accessToken);
-
-    } catch (err: unknown) {
-      handleAuthErrors(err);
+      
+    } catch (error: unknown) {
+      if (error instanceof FirebaseError) throw error;
+      throw new Error('There was a problem with signing up.');
     }
   };
 
@@ -54,8 +53,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       cookies.set('token', accessToken);
       setUser(accessToken);
 
-    } catch (err: unknown) {
-      console.log(err);
+    } catch (error: unknown) {
+      if (error instanceof FirebaseError) throw error;
+      throw new Error('There was a problem with logging in.');
     }
   };
 
