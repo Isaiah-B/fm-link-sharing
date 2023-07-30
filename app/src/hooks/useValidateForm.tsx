@@ -9,6 +9,7 @@ export default function useValidateForm() {
     const handleSubmit = () => {
       if (ref.current) {
         ref.current.className = 'submitted';
+        ref.current.requestSubmit();
       }
     }
 

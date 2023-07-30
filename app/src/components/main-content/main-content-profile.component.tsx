@@ -25,6 +25,7 @@ export default function MainContentProfile() {
 
   const [selectedFile, setSelectedFile] = useState<string>();
 
+  const formRef = useValidateForm();
 
   const handleSetFile = (file: File) => {
     const imageUrl = URL.createObjectURL(file);
@@ -71,8 +72,6 @@ export default function MainContentProfile() {
   const handleChangeText = (field: 'firstName' | 'lastName' | 'email', value: string) => {
     setMockupState((state) => ({ ...state, [field]: value}));
   }
-
-  const formRef = useValidateForm();
 
   return (
     <form ref={formRef}>

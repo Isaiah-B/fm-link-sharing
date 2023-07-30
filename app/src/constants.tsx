@@ -15,7 +15,9 @@ import { ReactComponent as GitLabLogo } from './assets/images/icon-gitlab.svg';
 import { ReactComponent as HashNodeLogo } from './assets/images/icon-hashnode.svg';
 import { ReactComponent as StackOverflowLogo } from './assets/images/icon-stack-overflow.svg';
 
-export const LINK_SITES = {
+import { StringIndex } from './types';
+
+export const LINK_SITES: StringIndex = {
   github: {
     name: "GitHub",
     placeholderUrl: "https://www.github.com/johnappleseed",
@@ -37,7 +39,7 @@ export const LINK_SITES = {
     color: "hsl(198, 79%, 59%)",
     validation: /https:\/\/www\.twitter\.com\/[\w\-]*/
   },
-  linkdIn: {
+  linkedin: {
     name: "LinkedIn",
     placeholderUrl: "https://www.linkedin.com/johnappleseed",
     logo: LinkedInLogo,
@@ -51,7 +53,7 @@ export const LINK_SITES = {
     color: "hsl(227, 66%, 41%)",
     validation: /https:\/\/www\.facebook\.com\/[\w\-]*/
   },
-  frontendMentor: {
+  frontendmentor: {
     name: "Frontend Mentor",
     placeholderUrl: "https://www.frontendmentor.io/johnappleseed",
     logo: FrontendMentorLogo,
@@ -86,14 +88,14 @@ export const LINK_SITES = {
     color: "hsl(145, 68%, 32%)",
     validation: /https:\/\/www\.codepen\.io\/[\w\-]*/
   },
-  freeCodeCamp: {
+  freecodecamp: {
     name: "freeCodeCamp",
     placeholderUrl: "https://www.freecodecamp.org/johnappleseed",
     logo: FreeCodeCampLogo,
     color: "hsl(252, 50%, 27%)",
     validation: /https:\/\/www\.freecodecamp\.org\/[\w\-]*/
   },
-  gitLab: {
+  gitlab: {
     name: "GitLab",
     placeholderUrl: "https://gitlab.com/johnappleseed",
     logo: GitLabLogo,
@@ -107,7 +109,7 @@ export const LINK_SITES = {
     color: "hsl(227, 98%, 42%)",
     validation: /https:\/\/www\.hashnode\.com\/@[\w\-]*/
   },
-  stackOverflow: {
+  stackoverflow: {
     name: "Stack Overflow",
     placeholderUrl: "https://stackoverflow.com/users/1234/johnappleseed",
     logo: StackOverflowLogo,

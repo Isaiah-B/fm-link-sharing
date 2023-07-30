@@ -11,7 +11,7 @@ import { AuthLayoutContainer } from './layout-auth.styles';
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   const { user } = useContext(AuthContext);
 
-  if (user) {
+  if (user.token) {
     return <Navigate to={'/'} replace />
   }
 

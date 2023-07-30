@@ -5,14 +5,14 @@ const parseFirebaseError = (message: string) => {
 }
 
 export default function handleAuthErrors(error: unknown) {
-  console.log(error);
-
   if (error instanceof FirebaseError) {
     switch (error.code) {
       case 'auth/weak-password':
         return parseFirebaseError(error.message);
       case 'auth/user-not-found':
-        return 'User with this email and password was not found.'
+        return 'User with this email and password was not found.';
+      case 'auth/wrong-password':
+        return 'Password is incorrect.';
       default:
         return error.code; 
     }
