@@ -16,6 +16,7 @@ export interface AuthCredentials {
 export interface UserDataType {
   links: { name: string, link: string }[],
   profile: {
+    profilePictureUrl: string,
     firstName: string,
     lastName: string,
     email: string,

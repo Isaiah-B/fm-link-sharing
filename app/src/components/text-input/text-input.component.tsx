@@ -1,6 +1,12 @@
 import { useState } from 'react';
 
-import { LinkItemElementLabelText, TextInputContainer, TextInputError, TextInputInput, TextInputWrapper } from './text-input.styles';
+import {
+  LinkItemElementLabelText,
+  TextInputContainer,
+  TextInputError,
+  TextInputInput,
+  TextInputWrapper,
+} from './text-input.styles';
 
 interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   inputLabel?: string, 

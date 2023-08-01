@@ -3,10 +3,13 @@ import { useRecoilState } from 'recoil'
 import { store } from '../../firebase';
 import { doc, updateDoc } from 'firebase/firestore';
 
+import Toast from '../toast/toast.component';
 import LinkItem from '../link-item/link-item.component';
 import ListEmpty from '../list-empty/list-empty.component';
+import { ReactComponent as SaveIcon } from '../../assets/images/icon-changes-saved.svg';
 
 import useValidateForm from '../../hooks/useValidateForm';
+import useFlashComponent from '../../hooks/useflashComponent';
 
 import { LINK_SITES } from '../../constants';
 import { PlatformType } from '../../types';
@@ -29,6 +32,7 @@ export default function MainContentLinks() {
   const linkList = mockupState.links;
 
   const formRef = useValidateForm();
+  const { showComponent, componentOpacity, flash } = useFlashComponent();
 
   // Add link to list on click "Add new link" button
   const addLink = () => {
@@ -60,47 +64,61 @@ export default function MainContentLinks() {
 
       const linkDocRef = doc(store, 'userLinks', user.id);
       await updateDoc(linkDocRef, { links: data });
+
+      flash();
     } catch (err: unknown) {
       console.error(err)
     }
   };
 
   return (
-    <form ref={formRef} onSubmit={saveLinks}>
-      <ContentHeader>
-        <h1>Customize your links</h1>
-        <p>Add/edit/remove links below and then share all your profiles with the world!</p>
-      </ContentHeader>
-      
-      <AddLinkButton
-        type='button'
-        onClick={addLink}
-      >
-        + Add new link
-      </AddLinkButton>
-      
-      <LinkItemListWrapper>      
-        {
-          linkList.length < 1
-            ? <ListEmpty />
-            : null
-        }
-      
-        <LinkItemList>
+    <>
+      <form ref={formRef} onSubmit={saveLinks}>
+        <ContentHeader>
+          <h1>Customize your links</h1>
+          <p>Add/edit/remove links below and then share all your profiles with the world!</p>
+        </ContentHeader>
+        
+        <AddLinkButton
+          type='button'
+          onClick={addLink}
+        >
+          + Add new link
+        </AddLinkButton>
+        
+        <LinkItemListWrapper>      
           {
-            linkList.map((linkItem, index) => (
-              <LinkItem
-                key={index}
-                index={index + 1}
-                platform={linkItem}
-                handleRemove={removeLink}
-              />
-            ))
+            linkList.length < 1
+              ? <ListEmpty />
+              : null
           }
-        </LinkItemList>
-      </LinkItemListWrapper>
+        
+          <LinkItemList>
+            {
+              linkList.map((linkItem, index) => (
+                <LinkItem
+                  key={index}
+                  index={index + 1}
+                  platform={linkItem}
+                  handleRemove={removeLink}
+                />
+              ))
+            }
+          </LinkItemList>
+        </LinkItemListWrapper>
+      </form>
 
-    </form>
-
+      {
+        showComponent
+          ? (
+            <Toast
+              Icon={SaveIcon}
+              text='Your changes have been successfully saved!'
+              style={{ opacity: componentOpacity }}
+            />
+          )
+          : null
+      }
+    </>
   );
 }

@@ -1,7 +1,7 @@
 import { HeaderContainer, PreviewLink } from './header.styles';
 import { ButtonPrimary, ButtonSecondary } from '../..';
 
-export default function HeaderPreview() {
+export default function HeaderPreview({ handleShareLink }: { handleShareLink: () => void }) {
   return (
     <HeaderContainer>
       <PreviewLink to={'/'}>
@@ -10,7 +10,7 @@ export default function HeaderPreview() {
         </ButtonSecondary>
       </PreviewLink>
 
-      <ButtonPrimary>
+      <ButtonPrimary onClick={handleShareLink}>
         Share Link
       </ButtonPrimary>
     </HeaderContainer>

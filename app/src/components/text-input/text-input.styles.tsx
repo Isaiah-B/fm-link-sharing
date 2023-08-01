@@ -2,8 +2,7 @@ import styled from 'styled-components';
 import { BodyM, BodyS } from '../..';
 
 export const TextInputContainer = styled.div`
-  position: relative;
-
+  
   &:hover {
     cursor: pointer;
   }

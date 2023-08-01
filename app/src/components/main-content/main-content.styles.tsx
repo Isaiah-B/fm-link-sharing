@@ -136,10 +136,10 @@ export const ProfileInfoInput = styled.div`
   justify-content: space-between;
 
   width: 100%;
+`;
 
-  div {
-    width: 60%;
-  }
+export const TextInputWidthWrapper = styled.div`
+  width: 60%;
 `;
 
 export const ProfileInfoLabel = styled.span`

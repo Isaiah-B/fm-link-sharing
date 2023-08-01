@@ -49,6 +49,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const newLinks: UserDataType = {
         links: [],
         profile: {
+          profilePictureUrl: '',
           firstName: '',
           lastName: '',
           email: ''

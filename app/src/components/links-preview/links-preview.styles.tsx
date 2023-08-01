@@ -27,10 +27,12 @@ export const LinksPreviewImageWrapper = styled.div`
 
   padding: 0.4rem;
   border-radius: 50%;
-  background-color: var(--purple);
+  border: 4px solid var(--purple);
+  background-color: transparent;
 
   img {
     width: 100%;
+    height: 100%;
     border-radius: 50%;
     object-fit: cover;
   }

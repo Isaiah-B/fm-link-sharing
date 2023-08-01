@@ -1,6 +1,6 @@
-import { useRecoilValue } from 'recoil';
-
 import MockupLink from '../mockup-link/mockup-link.component';
+
+import { MockupDataType } from '../../types';
 
 import {
   LinksPreviewContainer,
@@ -11,24 +11,26 @@ import {
   LinksPreviewName,
 } from './links-preview.styles';
 
-export default function LinksPreview() {
+export default function LinksPreview({ data }: { data: MockupDataType }) {
+  const { links, profile } = data;
+  const { firstName, lastName, email, profilePictureUrl } = profile;
 
   return (
     <LinksPreviewContainer>
       <LinksPreviewImageWrapper>
-        {/* <img src={profilePictureUrl} alt="" /> */}
+        <img src={profilePictureUrl} alt="" />
       </LinksPreviewImageWrapper>
 
       <LinksPreviewInfoWrapper>
-        {/* <LinksPreviewName>{`${firstName} ${lastName}`}</LinksPreviewName>
-        <LinksPreviewEmail>{email}</LinksPreviewEmail> */}
+        <LinksPreviewName>{`${firstName} ${lastName}`}</LinksPreviewName>
+        <LinksPreviewEmail>{email}</LinksPreviewEmail>
       </LinksPreviewInfoWrapper>
 
       <LinksPreviewList>
         {
-          // linkList.map((linkItem, index) => (
-          //   <MockupLink key={index} platform={linkItem} isPreview />
-          // ))
+          links.map((linkItem, index) => (
+            <MockupLink key={index} platform={linkItem} isPreview />
+          ))
         }
       </LinksPreviewList>
     </LinksPreviewContainer>

@@ -5,9 +5,12 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
 import TextInput from '../text-input/text-input.component';
+import Toast from '../toast/toast.component';
 import { ReactComponent as UploadIcon } from '../../assets/images/icon-upload-image.svg';
+import { ReactComponent as SaveIcon } from '../../assets/images/icon-changes-saved.svg';
 
 import useValidateForm from '../../hooks/useValidateForm';
+import useFlashComponent from '../../hooks/useflashComponent';
 
 import { auth, storage, store } from '../../firebase';
 import { MockupDataState } from '../../recoil/store';
@@ -24,6 +27,7 @@ import {
   ProfilePictureUploadBox,
   ProfilePictureUploadText,
   ProfileScrollable,
+  TextInputWidthWrapper,
 } from './main-content.styles';
 
 export default function MainContentProfile() {
@@ -35,6 +39,7 @@ export default function MainContentProfile() {
   const [imageUrl, setImageUrl] = useState(auth.currentUser?.photoURL || '');
   
   const formRef = useValidateForm();
+  const { showComponent, componentOpacity, flash } = useFlashComponent();
 
   const { firstName, lastName, email } = mockupState.profile;
 
@@ -47,11 +52,10 @@ export default function MainContentProfile() {
     
     // Change the mockup profile picture
     setMockupState({ ...mockupState, profile: { ...mockupState.profile, profilePictureUrl: image }});
-    // Release objectUrl with URL.revokeObjectURL for memory management
   }
 
-  const handleUploadFile = (event: React.FormEvent<HTMLInputElement>) => {
-    // Read image with FileReader and Image, and validate its width and height
+  // Ensure file is a valid width and height, then upload it to client state
+  const validateFile = (event: React.FormEvent<HTMLInputElement>) => {
     if (event.currentTarget.files && event.currentTarget.files.length) {
       const file = event.currentTarget.files[0];
       const reader = new FileReader();
@@ -107,92 +111,110 @@ export default function MainContentProfile() {
         const updatedProfile = { ...mockupState.profile, profilePictureUrl: downloadUrl };
         setMockupState((state) => ({ ...state, profile: updatedProfile }));
       }
-  
-      // Exclude profilePictureUrl from data sent to Firebase
-      const { profilePictureUrl, ...data} = mockupState.profile;
 
       const profileDocRef = doc(store, 'userLinks', user.id);
-      await updateDoc(profileDocRef, { profile: data });
+      await updateDoc(profileDocRef, { profile: mockupState.profile });
 
+      flash();
     } catch (err: unknown) {
       console.error(err);
     }
   }
 
   return (
-    <form ref={formRef} onSubmit={saveProfile}>
-      <ContentHeader>
-        <h1>Profile Details</h1>
-        <p>Add your details to create a personal touch to your profile</p>
-      </ContentHeader>
+    <>
+      <form ref={formRef} onSubmit={saveProfile}>
+        <ContentHeader>
+          <h1>Profile Details</h1>
+          <p>Add your details to create a personal touch to your profile</p>
+        </ContentHeader>
 
-      <ProfileScrollable>
-        <ProfilePictureSection>
-          <ProfilePictureSectionLeft>
-            <span>Profile Picture</span>
-          </ProfilePictureSectionLeft>
+        <ProfileScrollable>
+          <ProfilePictureSection>
+            <ProfilePictureSectionLeft>
+              <span>Profile Picture</span>
+            </ProfilePictureSectionLeft>
 
-          <ProfilePictureSectionRight>
-            <label>
-              <input
-                type="file"
-                accept="image/png, image/jpeg, image/jpg"
-                onChange={handleUploadFile}
-              />
+            <ProfilePictureSectionRight>
+              <label>
+                <input
+                  type="file"
+                  accept="image/png, image/jpeg, image/jpg"
+                  onChange={validateFile}
+                />
 
-              <ProfilePictureUploadBox
-                className={selectedFile ? 'image-selected' : ''}
-                image={imageUrl ? imageUrl : ''}
-              >
-                <UploadIcon />
-                {
-                  selectedFile
-                    ? <h2>Change Image</h2>
-                    : <h2>+ Upload Image</h2>
-                }
-              </ProfilePictureUploadBox>
+                <ProfilePictureUploadBox
+                  className={selectedFile ? 'image-selected' : ''}
+                  image={imageUrl ? imageUrl : ''}
+                >
+                  <UploadIcon />
+                  {
+                    selectedFile
+                      ? <h2>Change Image</h2>
+                      : <h2>+ Upload Image</h2>
+                  }
+                </ProfilePictureUploadBox>
 
-            </label>
+              </label>
 
-            <ProfilePictureUploadText>
-              Image must be below 1024x1024px. Use PNG or JPG format.
-            </ProfilePictureUploadText>
-          </ProfilePictureSectionRight>
-        </ProfilePictureSection>
+              <ProfilePictureUploadText>
+                Image must be below 1024x1024px. Use PNG or JPG format.
+              </ProfilePictureUploadText>
+            </ProfilePictureSectionRight>
+          </ProfilePictureSection>
 
-        <ProfileInfoSection>
-          <ProfileInfoInput>
-            <ProfileInfoLabel>First name*</ProfileInfoLabel>
-            <TextInput
-              value={firstName}
-              onChange={({ target }) => handleChangeText('firstName', target.value)}
-              placeholder='e.g. John'
-              required
+          <ProfileInfoSection>
+            <ProfileInfoInput>
+              <ProfileInfoLabel>First name*</ProfileInfoLabel>
+              <TextInputWidthWrapper>
+                <TextInput
+                  value={firstName}
+                  onChange={({ target }) => handleChangeText('firstName', target.value)}
+                  placeholder='e.g. John'
+                  required
+                />
+              </TextInputWidthWrapper>
+            </ProfileInfoInput>
+
+            <ProfileInfoInput>
+              <ProfileInfoLabel>Last name*</ProfileInfoLabel>
+              <TextInputWidthWrapper>
+                <TextInput
+                  value={lastName}
+                  onChange={({ target }) => handleChangeText('lastName', target.value)}
+                  placeholder='e.g. Appleseed'
+                  required
+                />
+              </TextInputWidthWrapper>
+            </ProfileInfoInput>
+            
+            <ProfileInfoInput>
+              <ProfileInfoLabel>Email</ProfileInfoLabel>
+              <TextInputWidthWrapper>
+                <TextInput
+                  value={email}
+                  onChange={({ target }) => handleChangeText('email', target.value)}
+                  type='email'
+                  placeholder='e.g. email@example.com'
+                  required={false}
+                />
+              </TextInputWidthWrapper>
+            </ProfileInfoInput>
+          </ProfileInfoSection>
+        </ProfileScrollable>
+      </form>
+
+      {
+        showComponent
+          ? (
+            <Toast
+              Icon={SaveIcon}
+              text='Your changes have been successfully saved!'
+              style={{ opacity: componentOpacity }}
             />
-          </ProfileInfoInput>
-
-          <ProfileInfoInput>
-            <ProfileInfoLabel>Last name*</ProfileInfoLabel>
-            <TextInput
-              value={lastName}
-              onChange={({ target }) => handleChangeText('lastName', target.value)}
-              placeholder='e.g. Appleseed'
-              required
-            />
-          </ProfileInfoInput>
-          
-          <ProfileInfoInput>
-            <ProfileInfoLabel>Email</ProfileInfoLabel>
-            <TextInput
-              value={email}
-              onChange={({ target }) => handleChangeText('email', target.value)}
-              type='email'
-              placeholder='e.g. email@example.com'
-              required={false}
-            />
-          </ProfileInfoInput>
-        </ProfileInfoSection>
-      </ProfileScrollable>
-    </form>
+          )
+          : null
+      }
+    </>
   );
 }

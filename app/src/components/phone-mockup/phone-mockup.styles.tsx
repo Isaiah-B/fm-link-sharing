@@ -29,16 +29,14 @@ export const MockupProfilePicture = styled.div`
 
   width: 9.6rem;
   height: 9.6rem;
-  padding: 0.4rem;
 
   border-radius: 50%;
-  background-color: var(--purple);
+  border: 4px solid var(--purple);
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 50%;
   }
 `;
 
