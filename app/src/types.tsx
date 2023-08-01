@@ -13,16 +13,24 @@ export interface AuthCredentials {
   passwordConfirm?: string,
 }
 
-export interface LinksDataType {
+export interface UserDataType {
   links: { name: string, link: string }[],
   profile: {
-    image: string | null,
     firstName: string,
     lastName: string,
     email: string,
   }
 }
 
+export interface MockupDataType {
+  links: PlatformType[],
+  profile: {
+    profilePictureUrl: string,
+    firstName: string,
+    lastName: string,
+    email: string,
+  }
+}
 export type StringIndex = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [index: string]: any,

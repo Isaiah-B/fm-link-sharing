@@ -5,7 +5,7 @@ import { doc, setDoc } from 'firebase/firestore';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 
 import { auth, store } from '../firebase';
-import { AuthCredentials, LinksDataType } from '../types';
+import { AuthCredentials, UserDataType } from '../types';
 
 interface AuthContextType {
   user: { id: string, token: string | null },
@@ -46,16 +46,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       setUser({ id: userCredential.user.uid, token: accessToken });
       
-      const newLinks: LinksDataType = {
+      const newLinks: UserDataType = {
         links: [],
         profile: {
-          image: null,
           firstName: '',
           lastName: '',
           email: ''
         }
       }
-      
+
       // Create doc to store user's links and profile info
       const linksDocRef = doc(store, 'userLinks', userCredential.user.uid);
       await setDoc(linksDocRef, newLinks);

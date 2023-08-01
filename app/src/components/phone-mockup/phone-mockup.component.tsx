@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil';
 import MockupLink from '../mockup-link/mockup-link.component';
 import { ReactComponent as PhoneIllustration } from '../../assets/images/illustration-phone-mockup.svg';
 
-import { LinksState, MockupState } from '../../recoil/store';
+import { MockupDataState} from '../../recoil/store';
 
 import {
   MockupLinkList,
@@ -15,8 +15,10 @@ import {
 } from './phone-mockup.styles';
 
 export default function PhoneMockup() {
-  const { firstName, lastName, email, profilePictureUrl } = useRecoilValue(MockupState);
-  const linkList = useRecoilValue(LinksState);
+  const mockupState = useRecoilValue(MockupDataState);
+
+  const linkList = mockupState.links;
+  const { firstName, lastName, email, profilePictureUrl } = mockupState.profile;
 
   return (
     <PhoneMockupContainer>

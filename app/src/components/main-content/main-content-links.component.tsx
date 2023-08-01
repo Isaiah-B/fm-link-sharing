@@ -1,7 +1,7 @@
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { useRecoilState } from 'recoil'
 import { store } from '../../firebase';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
 
 import LinkItem from '../link-item/link-item.component';
 import ListEmpty from '../list-empty/list-empty.component';
@@ -9,8 +9,8 @@ import ListEmpty from '../list-empty/list-empty.component';
 import useValidateForm from '../../hooks/useValidateForm';
 
 import { LINK_SITES } from '../../constants';
-import { LinksDataType, PlatformType } from '../../types';
-import { LinksState } from '../../recoil/store';
+import { PlatformType } from '../../types';
+import { MockupDataState } from '../../recoil/store';
 import { AuthContext } from '../../context/auth-context';
 
 import {
@@ -24,7 +24,9 @@ import {
 export default function MainContentLinks() {
   const { user } = useContext(AuthContext);
 
-  const [linkItems, setLinkItems] = useRecoilState(LinksState);
+  const [mockupState, setMockupState] = useRecoilState(MockupDataState);
+
+  const linkList = mockupState.links;
 
   const formRef = useValidateForm();
 
@@ -35,12 +37,12 @@ export default function MainContentLinks() {
       link: '',
     }
 
-    setLinkItems(linkItems.concat(newLinkItem))
+    setMockupState({ ...mockupState, links: linkList.concat(newLinkItem) });
   }
 
   // Remove link from list on click "Remove"
   const removeLink = (itemIndex: number) => {
-    setLinkItems(linkItems.filter((item) => item != linkItems[itemIndex - 1]));
+    setMockupState({ ...mockupState, links: linkList.filter((item) => item != linkList[itemIndex - 1]) });
   }
   
 
@@ -51,7 +53,7 @@ export default function MainContentLinks() {
     if (!user) return;
 
     try {
-      const data = linkItems.map((item) => ({
+      const data = linkList.map((item) => ({
         link: item.link,
         name: item.name,
       }));
@@ -62,31 +64,6 @@ export default function MainContentLinks() {
       console.error(err)
     }
   };
-
-  // Fetch user's links from Firestore
-  useEffect(() => {
-    const getUserData = async () => {
-      if (user.id) {
-        const linkDocRef = doc(store, 'userLinks', user.id);
-        const dataDoc = await getDoc(linkDocRef);
-        const data = dataDoc.data();
-
-        if (data && data.links) {
-          const dataLinks: LinksDataType['links'] = data.links;
-
-          // Get full link object using the "name" field of the dataLink object
-          const convertedLinks = dataLinks.map((item) => {
-            return { ...LINK_SITES[item.name.toLowerCase()], link: item.link };
-          });
-
-          setLinkItems(convertedLinks);
-        }
-      } 
-    }
-
-    getUserData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
 
   return (
     <form ref={formRef} onSubmit={saveLinks}>
@@ -104,14 +81,14 @@ export default function MainContentLinks() {
       
       <LinkItemListWrapper>      
         {
-          linkItems.length < 1
+          linkList.length < 1
             ? <ListEmpty />
             : null
         }
       
         <LinkItemList>
           {
-            linkItems.map((linkItem, index) => (
+            linkList.map((linkItem, index) => (
               <LinkItem
                 key={index}
                 index={index + 1}

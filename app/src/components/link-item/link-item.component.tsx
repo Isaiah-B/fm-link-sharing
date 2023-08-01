@@ -10,7 +10,7 @@ import useClickOutside from '../../hooks/useClickOutside';
 
 import { LINK_SITES } from '../../constants';
 import { PlatformType } from '../../types';
-import { LinksState } from '../../recoil/store';
+import { MockupDataState } from '../../recoil/store';
 
 import {
   DropdownContainer,
@@ -56,17 +56,19 @@ interface LinkItemProps {
 export default function LinkItem({ index, platform, handleRemove }: LinkItemProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const [linkList, setLinkList] = useRecoilState(LinksState);
-  
+  const [mockupData, setMockupData] = useRecoilState(MockupDataState);
+  const linkList = mockupData.links;
+
   // Close dropdown when clicking outside the dropdown container area
   const clickOutsideRef = useClickOutside(() => setDropdownOpen(false)) as RefObject<HTMLDivElement>;
 
+  // Change the platform to the one selected from the dropdown
   const setSite = (platform: PlatformType) => {
     const updatedList = linkList.map((item, _index) => (
       index === _index + 1 ? {...platform, link: ''} : item
     ));
     
-    setLinkList(updatedList);
+    setMockupData({ ...mockupData, links: updatedList });
   }
 
   const handleChangeLinkText = (text: string) => {
@@ -74,7 +76,7 @@ export default function LinkItem({ index, platform, handleRemove }: LinkItemProp
       index === _index + 1 ? { ...item, link: text } : item
     ));
 
-    setLinkList(updatedList);
+    setMockupData({ ...mockupData, links: updatedList });
   }
 
   const setErrorMsg = () => {

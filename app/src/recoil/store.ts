@@ -1,15 +1,8 @@
 import { atom } from "recoil";
-import { PlatformType } from "../types";
+import { MockupDataType } from "../types";
 
 type PageType = {
   page: 'links' | 'profile',
-}
-
-interface MockupProps {
-  profilePictureUrl: string,
-  firstName: string,
-  lastName: string,
-  email?: string,
 }
 
 export const PageState = atom<PageType['page']>({
@@ -17,17 +10,16 @@ export const PageState = atom<PageType['page']>({
   default: 'links'
 });
 
-export const LinksState = atom({
-  key: "Links",
-  default: [] as PlatformType[],
-});
-
-export const MockupState = atom<MockupProps>({
-  key: "Mockup",
+export const MockupDataState = atom<MockupDataType>({
+  key: "MockupData",
   default: {
-    profilePictureUrl: '',
-    firstName: '',
-    lastName: '',
-    email: '',
+    links: [],
+    profile: {
+      profilePictureUrl: '',
+      firstName: '',
+      lastName: '',
+      email: '',
+    }
   }
 });
+
