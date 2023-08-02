@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
 
 import HeaderPreview from '../../components/headers/header-preview.component';
 import LinksPreview from '../../components/links-preview/links-preview.component';
@@ -7,10 +8,11 @@ import Toast from '../../components/toast/toast.component';
 import { ReactComponent as LinkIcon } from '../../assets/images/icon-link-copied-to-clipboard.svg';
 
 import useFlashComponent from '../../hooks/useflashComponent';
-
 import getUserData from '../../utils/getUserData';
+
 import { AuthContext } from '../../context/auth-context';
 import { MockupDataType } from '../../types';
+import { MockupDataState } from '../../recoil/store';
 
 import {
   PagePreviewBackground,
@@ -22,6 +24,8 @@ export default function PagePreview() {
   const { user } = useContext(AuthContext);
   const [previewData, setPreviewData] = useState<MockupDataType>();
 
+  const mockupState = useRecoilValue(MockupDataState);
+
   const { showComponent, componentOpacity, flash } = useFlashComponent();
 
   const copyLink = () => {
@@ -32,19 +36,26 @@ export default function PagePreview() {
   useEffect(() => {
     const getData = async () => {
       if (id) {
-        const data = await getUserData(id);
-        if (data) setPreviewData(data);
+        const userData = await getUserData(id);
+        if (userData) {
+          setPreviewData(userData);
+        } else if (mockupState) {
+          setPreviewData(mockupState);
+        }
+        
+        return;
       }
     }
 
     getData();
-  }, [id])
+  }, [id, mockupState])
 
+  
   return (
     <PagePreviewContainer>
       <PagePreviewBackground />
       {
-        id === user.id
+        (id === user.id) && !user.isAnon
           ? <HeaderPreview handleShareLink={copyLink} />
           : null
       }

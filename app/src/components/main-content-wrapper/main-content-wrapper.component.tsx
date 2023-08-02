@@ -16,11 +16,22 @@ import {
 } from '../main-content-wrapper/main-content-wrapper.styles';
 
 export default function MainContentWrapper() {
-  const { user } = useContext(AuthContext);
+  const { user, createAnonymousUser } = useContext(AuthContext);
   
   const pageState = useRecoilValue(PageState);
   const [mockupState, setMockupState] = useRecoilState(MockupDataState);
 
+  useEffect(() => {
+    const signInAnon = async () => {
+      await createAnonymousUser();
+    }
+
+    if (!user.id) {
+      signInAnon();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  
   // Fetch and set user's links and profile from Firestore
   useEffect(() => {
     const getData = async () => {
@@ -28,9 +39,11 @@ export default function MainContentWrapper() {
       if (data) setMockupState(data);
     }
 
-    getData();
+    if (user.id && !user.isAnon) {
+      getData();
+    }
   }, [user, setMockupState]);
-  
+
   return (
       <MainContentWrapperContainer>
         <MainContentTop>

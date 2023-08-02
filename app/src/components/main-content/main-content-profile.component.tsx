@@ -92,28 +92,34 @@ export default function MainContentProfile() {
     const updatedProfileFields = { ...mockupState.profile, [field]: value }
     setMockupState({...mockupState, profile: updatedProfileFields });
   }
-
+  
   const saveProfile = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (!user.id) return;
+    if (!user.token) return;
 
     try {
+      const profileDocRef = doc(store, 'userLinks', user.id);
+
       // If an image file is provided, upload it to Firebase storage, download the
       // url, and set it as the user's profile picture
       if (selectedFile && auth.currentUser) {
         const storageRef = ref(storage, `images/${selectedFile.name}`);
-        await uploadBytes(storageRef, selectedFile as File)
+        
+        await uploadBytes(storageRef, selectedFile as File);
         const downloadUrl = await getDownloadURL(storageRef);
         
         await updateProfile(auth.currentUser, { photoURL: downloadUrl });
         
         const updatedProfile = { ...mockupState.profile, profilePictureUrl: downloadUrl };
         setMockupState((state) => ({ ...state, profile: updatedProfile }));
+
+        await updateDoc(profileDocRef, { profile: updatedProfile });
       }
 
-      const profileDocRef = doc(store, 'userLinks', user.id);
-      await updateDoc(profileDocRef, { profile: mockupState.profile });
+      else if (!selectedFile && auth.currentUser) {
+        await updateDoc(profileDocRef, { profile: mockupState.profile });
+      }
 
       flash();
     } catch (err: unknown) {
