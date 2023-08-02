@@ -21,6 +21,12 @@ export default function MainContentWrapper() {
   const pageState = useRecoilValue(PageState);
   const [mockupState, setMockupState] = useRecoilState(MockupDataState);
 
+  // Disable save button
+  const saveDisabled = () => {
+    return mockupState.links.length < 1
+      || !user.token && user.isAnon
+  }
+
   useEffect(() => {
     const signInAnon = async () => {
       await createAnonymousUser();
@@ -57,7 +63,7 @@ export default function MainContentWrapper() {
         <SaveButtonWrapper>
           <ButtonPrimary
             name='submitBtn'
-            disabled={mockupState.links.length < 1}
+            disabled={saveDisabled()}
           >
             Save
           </ButtonPrimary>
