@@ -18,8 +18,6 @@ function App() {
         <Route path='preview/:id' element={<PagePreview />} />
         <Route path='*' element={<h1>Nothing here!</h1>} />
       </Routes>
-
-      
     </Container>
   );
 }

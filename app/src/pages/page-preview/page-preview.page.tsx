@@ -28,7 +28,7 @@ export default function PagePreview() {
 
   const portalRef = useRef<{ flash: () => void }>(null);
 
-  const hasHeader = (id === user.id) && !user.isAnon;
+  const hasHeader = (id === user.id);
 
   const copyLink = () => {
     navigator.clipboard.writeText(window.location.href);
