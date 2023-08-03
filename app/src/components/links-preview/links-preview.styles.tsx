@@ -66,3 +66,7 @@ export const LinksPreviewList = styled.ul`
     width: 0px;
   }
 `;
+
+export const LinksPreviewEmptyText = styled.h2`
+  text-align: center;
+`;

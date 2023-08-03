@@ -1,13 +1,13 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 
+import Portal from '../../components/portal/portal.component';
+import Toast from '../../components/toast/toast.component';
 import HeaderPreview from '../../components/headers/header-preview.component';
 import LinksPreview from '../../components/links-preview/links-preview.component';
-import Toast from '../../components/toast/toast.component';
 import { ReactComponent as LinkIcon } from '../../assets/images/icon-link-copied-to-clipboard.svg';
 
-import useFlashComponent from '../../hooks/useflashComponent';
 import getUserData from '../../utils/getUserData';
 
 import { AuthContext } from '../../context/auth-context';
@@ -26,13 +26,20 @@ export default function PagePreview() {
 
   const mockupState = useRecoilValue(MockupDataState);
 
-  const { showComponent, componentOpacity, flash } = useFlashComponent();
+  const portalRef = useRef<{ flash: () => void }>(null);
+
+  const hasHeader = (id === user.id) && !user.isAnon;
 
   const copyLink = () => {
     navigator.clipboard.writeText(window.location.href);
-    flash();
+
+    if (portalRef.current){
+      portalRef.current.flash();
+    }
   }
 
+  // Retrieve data from Firebase if user is logged in.
+  // Otherwise, retrieve the values from mockupState
   useEffect(() => {
     const getData = async () => {
       if (id) {
@@ -50,12 +57,19 @@ export default function PagePreview() {
     getData();
   }, [id, mockupState])
 
-  
+  // Warn anonymous users that information will be lost when
+  // navigating away from the papge
+  if (user.isAnon) {
+    window.onbeforeunload = () => {
+      return confirm("Refreshing the page will remove any changes you've made. Are you sure you want to refresh?")
+    }
+  }
+
   return (
-    <PagePreviewContainer>
+    <PagePreviewContainer className={!hasHeader ? 'no-header' : ''}>
       <PagePreviewBackground />
       {
-        (id === user.id) && !user.isAnon
+        hasHeader
           ? <HeaderPreview handleShareLink={copyLink} />
           : null
       }
@@ -66,17 +80,12 @@ export default function PagePreview() {
           : null
       }
 
-      {
-        showComponent
-          ? (
-            <Toast
-              Icon={LinkIcon}
-              text='The link has been copied to your clipboard!'
-              style={{ opacity: componentOpacity }}
-            />
-          )
-          : null
-      }
+      <Portal ref={portalRef}>
+        <Toast
+          Icon={LinkIcon}
+          text='The link has been copied to your clipboard!'
+        />
+      </Portal>
     </PagePreviewContainer>
   );
 }

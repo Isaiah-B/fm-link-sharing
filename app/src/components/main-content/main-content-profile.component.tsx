@@ -1,16 +1,16 @@
-import { useContext, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { updateProfile } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
-import TextInput from '../text-input/text-input.component';
 import Toast from '../toast/toast.component';
+import Portal from '../portal/portal.component';
+import TextInput from '../text-input/text-input.component';
 import { ReactComponent as UploadIcon } from '../../assets/images/icon-upload-image.svg';
 import { ReactComponent as SaveIcon } from '../../assets/images/icon-changes-saved.svg';
 
 import useValidateForm from '../../hooks/useValidateForm';
-import useFlashComponent from '../../hooks/useflashComponent';
 
 import { auth, storage, store } from '../../firebase';
 import { MockupDataState } from '../../recoil/store';
@@ -39,10 +39,10 @@ export default function MainContentProfile() {
   const [imageUrl, setImageUrl] = useState(auth.currentUser?.photoURL || '');
   
   const formRef = useValidateForm();
-  const { showComponent, componentOpacity, flash } = useFlashComponent();
+  const portalRef = useRef<{ flash: () => void }>(null);
 
   const { firstName, lastName, email } = mockupState.profile;
-
+  
   // Store the selected file in state and create a temporary url for displaying
   // on the mockup
   const handleSetFile = (file: File) => {
@@ -54,7 +54,8 @@ export default function MainContentProfile() {
     setMockupState({ ...mockupState, profile: { ...mockupState.profile, profilePictureUrl: image }});
   }
 
-  // Ensure file is a valid width and height, then upload it to client state
+  // Ensure file is a valid width and height. If so, call "handleSetFile"
+  // to upload it to client state
   const validateFile = (event: React.FormEvent<HTMLInputElement>) => {
     if (event.currentTarget.files && event.currentTarget.files.length) {
       const file = event.currentTarget.files[0];
@@ -101,14 +102,15 @@ export default function MainContentProfile() {
     try {
       const profileDocRef = doc(store, 'userLinks', user.id);
 
-      // If an image file is provided, upload it to Firebase storage, download the
-      // url, and set it as the user's profile picture
+      // If an image file is in state, upload it to Firebase storage, download the
+      // url, and set the url as the user's photoURL
       if (selectedFile && auth.currentUser) {
         const storageRef = ref(storage, `images/${selectedFile.name}`);
         
         await uploadBytes(storageRef, selectedFile as File);
         const downloadUrl = await getDownloadURL(storageRef);
         
+        // Update user's photoURL
         await updateProfile(auth.currentUser, { photoURL: downloadUrl });
         
         const updatedProfile = { ...mockupState.profile, profilePictureUrl: downloadUrl };
@@ -121,7 +123,10 @@ export default function MainContentProfile() {
         await updateDoc(profileDocRef, { profile: mockupState.profile });
       }
 
-      flash();
+      // Flash toast notification
+      if (portalRef.current) {
+        portalRef.current.flash();
+      }
     } catch (err: unknown) {
       console.error(err);
     }
@@ -210,17 +215,12 @@ export default function MainContentProfile() {
         </ProfileScrollable>
       </form>
 
-      {
-        showComponent
-          ? (
-            <Toast
-              Icon={SaveIcon}
-              text='Your changes have been successfully saved!'
-              style={{ opacity: componentOpacity }}
-            />
-          )
-          : null
-      }
+      <Portal ref={portalRef}>
+        <Toast
+          Icon={SaveIcon}
+          text='Your changes have been successfully saved!'
+        />
+      </Portal>
     </>
   );
 }

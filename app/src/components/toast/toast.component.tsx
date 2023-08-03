@@ -1,13 +1,13 @@
 import { ToastContainer } from './toast.styles';
 
-interface ToastProps extends React.HtmlHTMLAttributes<HTMLElement> {
+interface ToastProps {
   Icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>>,
   text: string,
 }
 
-export default function Toast({ Icon, text, ...otherProps }: ToastProps) {
+export default function Toast({ Icon, text }: ToastProps) {
   return (
-    <ToastContainer {...otherProps}>
+    <ToastContainer>
       {
         Icon
           ? <Icon />

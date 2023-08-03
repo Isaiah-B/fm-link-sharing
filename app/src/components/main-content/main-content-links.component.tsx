@@ -1,15 +1,15 @@
-import { useContext } from 'react';
+import { useContext, useRef } from 'react';
 import { useRecoilState } from 'recoil'
 import { store } from '../../firebase';
 import { doc, updateDoc } from 'firebase/firestore';
 
+import Portal from '../portal/portal.component';
 import Toast from '../toast/toast.component';
 import LinkItem from '../link-item/link-item.component';
 import ListEmpty from '../list-empty/list-empty.component';
 import { ReactComponent as SaveIcon } from '../../assets/images/icon-changes-saved.svg';
 
 import useValidateForm from '../../hooks/useValidateForm';
-import useFlashComponent from '../../hooks/useflashComponent';
 
 import { LINK_SITES } from '../../constants';
 import { PlatformType } from '../../types';
@@ -32,7 +32,7 @@ export default function MainContentLinks() {
   const linkList = mockupState.links;
 
   const formRef = useValidateForm();
-  const { showComponent, componentOpacity, flash } = useFlashComponent();
+  const portalRef = useRef<{ flash: () => void }>(null);
 
   // Add link to list on click "Add new link" button
   const addLink = () => {
@@ -48,7 +48,6 @@ export default function MainContentLinks() {
   const removeLink = (itemIndex: number) => {
     setMockupState({ ...mockupState, links: linkList.filter((item) => item != linkList[itemIndex - 1]) });
   }
-  
 
   // Save links to Firestore
   const saveLinks = async (event: React.FormEvent) => {
@@ -65,7 +64,11 @@ export default function MainContentLinks() {
       const linkDocRef = doc(store, 'userLinks', user.id);
       await updateDoc(linkDocRef, { links: data });
 
-      flash();
+      // Flash toast notification
+      if (portalRef.current) {
+        portalRef.current.flash();
+      }
+
     } catch (err: unknown) {
       console.error(err)
     }
@@ -108,17 +111,12 @@ export default function MainContentLinks() {
         </LinkItemListWrapper>
       </form>
 
-      {
-        showComponent
-          ? (
-            <Toast
-              Icon={SaveIcon}
-              text='Your changes have been successfully saved!'
-              style={{ opacity: componentOpacity }}
-            />
-          )
-          : null
-      }
+      <Portal ref={portalRef}>
+        <Toast
+          Icon={SaveIcon}
+          text='Your changes have been successfully saved!'
+        />
+      </Portal>
     </>
   );
 }

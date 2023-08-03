@@ -5,6 +5,7 @@ import { MockupDataType } from '../../types';
 import {
   LinksPreviewContainer,
   LinksPreviewEmail,
+  LinksPreviewEmptyText,
   LinksPreviewImageWrapper,
   LinksPreviewInfoWrapper,
   LinksPreviewList,
@@ -17,22 +18,36 @@ export default function LinksPreview({ data }: { data: MockupDataType }) {
 
   return (
     <LinksPreviewContainer>
-      <LinksPreviewImageWrapper>
-        <img src={profilePictureUrl} alt="" />
-      </LinksPreviewImageWrapper>
-
-      <LinksPreviewInfoWrapper>
-        <LinksPreviewName>{`${firstName} ${lastName}`}</LinksPreviewName>
-        <LinksPreviewEmail>{email}</LinksPreviewEmail>
-      </LinksPreviewInfoWrapper>
-
-      <LinksPreviewList>
         {
-          links.map((linkItem, index) => (
-            <MockupLink key={index} platform={linkItem} isPreview />
-          ))
+          profilePictureUrl
+            ? (
+              <LinksPreviewImageWrapper>
+                <img src={profilePictureUrl} alt="" />
+              </LinksPreviewImageWrapper>
+            )
+            : null
         }
-      </LinksPreviewList>
+
+      {
+        links.length || firstName.length || lastName.length || email.length
+          ? (<>
+              <LinksPreviewInfoWrapper>
+                <LinksPreviewName>{`${firstName} ${lastName}`}</LinksPreviewName>
+                <LinksPreviewEmail>{email}</LinksPreviewEmail>
+              </LinksPreviewInfoWrapper>
+
+              <LinksPreviewList>
+                {
+                  links.map((linkItem, index) => (
+                    <MockupLink key={index} platform={linkItem} isPreview />
+                  ))
+                }
+              </LinksPreviewList>
+            </>
+          )
+
+          : <LinksPreviewEmptyText>This person doesn't have anything to show!</LinksPreviewEmptyText>
+      }
     </LinksPreviewContainer>
   );
 }

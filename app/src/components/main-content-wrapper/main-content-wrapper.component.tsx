@@ -26,7 +26,7 @@ export default function MainContentWrapper() {
     return mockupState.links.length < 1
       || !user.token && user.isAnon
   }
-
+  
   useEffect(() => {
     const signInAnon = async () => {
       await createAnonymousUser();
@@ -38,6 +38,14 @@ export default function MainContentWrapper() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   
+  // Warn anonymous users that information will be lost when
+  // navigating away from the papge
+  if (user.isAnon) {
+    window.onbeforeunload = () => {
+      return confirm("Refreshing the page will remove any changes you've made. Are you sure you want to refresh?")
+    }
+  }
+
   // Fetch and set user's links and profile from Firestore
   useEffect(() => {
     const getData = async () => {
