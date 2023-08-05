@@ -1,5 +1,6 @@
 import { useState, RefObject } from 'react';
 import { useRecoilState } from 'recoil';
+import { Draggable, DraggingStyle, NotDraggingStyle } from 'react-beautiful-dnd';
 
 import { ReactComponent as DropdownArrow } from '../../assets/images/icon-chevron-down.svg';
 import { ReactComponent as DragIcon } from '../../assets/images/icon-drag-and-drop.svg';
@@ -24,6 +25,7 @@ import {
   LinkItemHeader,
   RemoveButton,
 } from './link-item.styles';
+
 import { LinkItemElementLabelText } from '../text-input/text-input.styles';
 
 function DropdownMenu({ handleSetPlatform }: { handleSetPlatform: (platform: PlatformType) => void }) {
@@ -87,59 +89,81 @@ export default function LinkItem({ index, platform, handleRemove }: LinkItemProp
     }
   }
 
+  // Set transform syle to lock x-axis while dragging
+  const styleOnDrag = (isDragging: boolean, style: DraggingStyle | NotDraggingStyle | undefined) => {
+    if (isDragging && style && style.transform) {
+      return {
+        ...style,
+        transform: `translate(0,${style.transform.split(',').pop()}`,
+      }
+    }
+    return style;
+  };
+
   return (
-    <LinkItemContainer>
-      <LinkItemHeader>
-        <LinkHeaderDragArea>
-          <DragIcon />
-          <h2>{`Link #${index}`}</h2>
-        </LinkHeaderDragArea>
+    <Draggable draggableId={index.toString()} index={index}>
+      {
+        (provided, snapshot) => (
+          <LinkItemContainer
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            style={styleOnDrag(snapshot.isDragging, provided.draggableProps.style)}
+          >
+            <LinkItemHeader>
+              <LinkHeaderDragArea>
+                <DragIcon />
+                <h2>{`Link #${index}`}</h2>
+              </LinkHeaderDragArea>
 
-        <RemoveButton
-          type='button'
-          onClick={() => handleRemove(index)}
-        >
-          Remove
-        </RemoveButton>
-      </LinkItemHeader>
+              <RemoveButton
+                type='button'
+                onClick={() => handleRemove(index)}
+              >
+                Remove
+              </RemoveButton>
+            </LinkItemHeader>
 
-      <LinkItemElementContainer>
-        <label>
-          <LinkItemElementLabelText>Platform</LinkItemElementLabelText>
+            <LinkItemElementContainer>
+              <label>
+                <LinkItemElementLabelText>Platform</LinkItemElementLabelText>
 
-          <DropdownContainer ref={clickOutsideRef}>   
-            <LinkDropdownButton
-              className={dropdownOpen ? 'selected' : ''}
-              type='button'
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-            >
-              <LinkDropdownButtonTitle>
-                <platform.logo />
-                {platform.name}
-              </LinkDropdownButtonTitle>
+                <DropdownContainer ref={clickOutsideRef}>   
+                  <LinkDropdownButton
+                    className={dropdownOpen ? 'selected' : ''}
+                    type='button'
+                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                  >
+                    <LinkDropdownButtonTitle>
+                      <platform.logo />
+                      {platform.name}
+                    </LinkDropdownButtonTitle>
 
-              <DropdownArrow />
-            </LinkDropdownButton>
+                    <DropdownArrow />
+                  </LinkDropdownButton>
 
-            {
-              dropdownOpen
-                ? <DropdownMenu handleSetPlatform={setSite} />
-                : null 
-            }
-          </DropdownContainer>
-        </label>
-      </LinkItemElementContainer>
+                  {
+                    dropdownOpen
+                      ? <DropdownMenu handleSetPlatform={setSite} />
+                      : null 
+                  }
+                </DropdownContainer>
+              </label>
+            </LinkItemElementContainer>
 
-      <TextInput
-        inputLabel='Link'
-        Icon={LinkIcon}
-        errorMsg={setErrorMsg()}
-        value={linkList[index - 1].link}
-        onChange={({ target }) => handleChangeLinkText(target.value)}
-        placeholder={platform.placeholderUrl}
-        pattern={RegExp(platform.validation).toString().slice(1,-1)}
-        required
-      />
-    </LinkItemContainer>
+            <TextInput
+              inputLabel='Link'
+              Icon={LinkIcon}
+              errorMsg={setErrorMsg()}
+              value={linkList[index - 1].link}
+              onChange={({ target }) => handleChangeLinkText(target.value)}
+              placeholder={platform.placeholderUrl}
+              pattern={RegExp(platform.validation).toString().slice(1,-1)}
+              required
+            />
+          </LinkItemContainer>
+        )
+      }
+    </Draggable>
   );
 }

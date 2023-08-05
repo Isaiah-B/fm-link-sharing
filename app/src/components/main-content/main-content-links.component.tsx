@@ -2,6 +2,7 @@ import { useContext, useRef } from 'react';
 import { useRecoilState } from 'recoil'
 import { store } from '../../firebase';
 import { doc, updateDoc } from 'firebase/firestore';
+import { DragDropContext, DropResult, Droppable } from 'react-beautiful-dnd';
 
 import Portal from '../portal/portal.component';
 import Toast from '../toast/toast.component';
@@ -74,6 +75,20 @@ export default function MainContentLinks() {
     }
   };
 
+  // Move link to position in the array it was dragged to
+  const handleDragEnd = (result: DropResult) => {
+    const { source, destination } = result;
+    const linksCopy = [...mockupState.links];
+
+    const draggedLink = linksCopy.splice(source.index - 1, 1)[0];
+
+    if (destination) {
+      linksCopy.splice(destination.index - 1, 0, draggedLink);
+    }
+
+    setMockupState({...mockupState, links: linksCopy});
+  }
+
   return (
     <>
       <form ref={formRef} onSubmit={saveLinks}>
@@ -96,18 +111,28 @@ export default function MainContentLinks() {
               : null
           }
         
-          <LinkItemList>
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Droppable droppableId={'0'}>
             {
-              linkList.map((linkItem, index) => (
-                <LinkItem
-                  key={index}
-                  index={index + 1}
-                  platform={linkItem}
-                  handleRemove={removeLink}
-                />
-              ))
+              (provided) => (
+                <LinkItemList ref={provided.innerRef} {...provided.droppableProps}>
+                  {
+                    linkList.map((linkItem, index) => (
+                      <LinkItem
+                        key={index}
+                        index={index + 1}
+                        platform={linkItem}
+                        handleRemove={removeLink}
+                      />
+                    ))
+                  }
+                  {provided.placeholder}
+
+                </LinkItemList>
+              )
             }
-          </LinkItemList>
+          </Droppable>
+        </DragDropContext>
         </LinkItemListWrapper>
       </form>
 
