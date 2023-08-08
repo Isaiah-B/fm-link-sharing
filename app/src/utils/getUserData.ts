@@ -9,40 +9,37 @@ import { UserDataType, MockupDataType } from "../types";
  * @returns 
  */
 export default async function getUserData(id: string) {
-  if (!id) throw new Error('User could not be found.');
+  if (!id) throw new Error("Id not provided.");
 
-  try {
-    const userDocRef = doc(store, 'userLinks', id);
-    const dataDoc = await getDoc(userDocRef);
-    if (!dataDoc.exists()) throw new Error("User could not be found.");
-    
-    const retrievedData = dataDoc.data();
+  const userDocRef = doc(store, 'userLinks', id);
+  const dataDoc = await getDoc(userDocRef);
 
-    if (retrievedData) {
-      const dataLinks: UserDataType['links'] = retrievedData.links;
-      const dataProfile: UserDataType['profile'] = retrievedData.profile;
+  if (!dataDoc.exists()) return null;
+  
+  const retrievedData = dataDoc.data();
 
-      // Get full link object using the "name" field of the dataLink object
-      const convertedLinks = dataLinks.map((item) => {
-        return { ...LINK_SITES[item.name.toLowerCase()], link: item.link };
-      });
+  if (retrievedData) {
+    const dataLinks: UserDataType['links'] = retrievedData.links;
+    const dataProfile: UserDataType['profile'] = retrievedData.profile;
 
-      let pictureUrl = dataProfile.profilePictureUrl;
+    // Get full link object using the "name" field of the dataLink object
+    const convertedLinks = dataLinks.map((item) => {
+      return { ...LINK_SITES[item.name.toLowerCase()], link: item.link };
+    });
 
-      if (auth.currentUser && auth.currentUser.photoURL) {
-        pictureUrl = auth.currentUser.photoURL;  
-      }
+    let pictureUrl = dataProfile.profilePictureUrl;
 
-      const data: MockupDataType = {
-        links: convertedLinks,
-        profile: { ...dataProfile, profilePictureUrl: pictureUrl}
-      }
-
-      return data;
+    if (auth.currentUser && auth.currentUser.photoURL) {
+      pictureUrl = auth.currentUser.photoURL;  
     }
-    
-    else throw new Error("Data could not be retrieved.");
-  } catch (err) {
-    console.log(err);
+
+    const data: MockupDataType = {
+      links: convertedLinks,
+      profile: { ...dataProfile, profilePictureUrl: pictureUrl}
+    }
+
+    return data;
   }
+  
+  else throw new Error("Data could not be retrieved.");
 }

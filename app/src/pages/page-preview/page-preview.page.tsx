@@ -44,9 +44,10 @@ export default function PagePreview() {
     const getData = async () => {
       if (id) {
         const userData = await getUserData(id);
+
         if (userData) {
           setPreviewData(userData);
-        } else if (mockupState) {
+        } else {
           setPreviewData(mockupState);
         }
         
@@ -54,7 +55,11 @@ export default function PagePreview() {
       }
     }
 
-    getData();
+    try {
+      getData();
+    } catch (err) {
+      console.log('Something went wrong!');
+    }
   }, [id, mockupState])
 
   // Warn anonymous users that information will be lost when

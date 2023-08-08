@@ -44,6 +44,12 @@ export const HeaderTab = styled.button`
   }
 `;
 
-export const PreviewLink = styled(Link)`
+export const HeaderRight = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+`;
+
+export const HeaderLink = styled(Link)`
   text-decoration: none;
 `;

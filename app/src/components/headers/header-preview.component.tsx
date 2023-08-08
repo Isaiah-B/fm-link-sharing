@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { AuthContext } from '../../context/auth-context';
 
-import { HeaderContainer, PreviewLink } from './header.styles';
+import { HeaderContainer, HeaderLink } from './header.styles';
 import { ButtonPrimary, ButtonSecondary } from '../..';
 
 export default function HeaderPreview({ handleShareLink }: { handleShareLink: () => void }) {
@@ -9,11 +9,11 @@ export default function HeaderPreview({ handleShareLink }: { handleShareLink: ()
 
   return (
     <HeaderContainer>
-      <PreviewLink to={'/'}>
+      <HeaderLink to={'/'}>
         <ButtonSecondary>
           Back to Editor
         </ButtonSecondary>
-      </PreviewLink>
+      </HeaderLink>
       
       {
         user.token

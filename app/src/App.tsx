@@ -1,11 +1,12 @@
+import { Suspense, lazy } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 import PageMain from "./pages/page-main/page-main.page";
-import PagePreview from './pages/page-preview/page-preview.page';
+const Login = lazy(() => import('./pages/auth/login-page'));
+const Signup = lazy(() => import('./pages/auth/signup-page'));
+const Preview = lazy(() => import('./pages/page-preview/page-preview.page'));
 
 import { Container } from "./App.styles";
-import LoginPage from './pages/auth/login-page';
-import SignupPage from './pages/auth/signup-page';
 
 function App() {
 
@@ -13,9 +14,9 @@ function App() {
     <Container>
       <Routes>
         <Route index element={<PageMain />} />
-        <Route path='login' element={<LoginPage />} />
-        <Route path='signup' element={<SignupPage />} />
-        <Route path='preview/:id' element={<PagePreview />} />
+        <Route path='login' element={<Suspense><Login /></Suspense>} />
+        <Route path='signup' element={<Suspense><Signup /></Suspense>} />
+        <Route path='preview/:id' element={<Suspense><Preview /></Suspense>} />
         <Route path='*' element={<h1>Nothing here!</h1>} />
       </Routes>
     </Container>

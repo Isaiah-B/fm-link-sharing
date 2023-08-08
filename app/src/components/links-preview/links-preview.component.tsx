@@ -12,7 +12,7 @@ import {
   LinksPreviewName,
 } from './links-preview.styles';
 
-export default function LinksPreview({ data }: { data: MockupDataType }) {
+export default function LinksPreview({ data }: { data: MockupDataType }) {  
   const { links, profile } = data;
   const { firstName, lastName, email, profilePictureUrl } = profile;
 

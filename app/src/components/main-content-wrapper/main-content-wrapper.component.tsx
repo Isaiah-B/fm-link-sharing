@@ -17,7 +17,7 @@ import {
 
 export default function MainContentWrapper() {
   const { user, createAnonymousUser } = useContext(AuthContext);
-  
+
   const pageState = useRecoilValue(PageState);
   const [mockupState, setMockupState] = useRecoilState(MockupDataState);
 
@@ -57,7 +57,7 @@ export default function MainContentWrapper() {
       getData();
     }
   }, [user, setMockupState]);
-
+  
   return (
       <MainContentWrapperContainer>
         <MainContentTop>
