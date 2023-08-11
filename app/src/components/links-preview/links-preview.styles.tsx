@@ -1,12 +1,13 @@
 import styled from 'styled-components';
-import { BodyM } from '../..';
+import { BodyM } from '../../index.styles';
+import { MEDIA_SIZES } from '../../constants';
 
 export const LinksPreviewContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  width: 35rem;
+  max-width: 90rem;
   height: auto;
   max-height: 71%;
 
@@ -14,6 +15,13 @@ export const LinksPreviewContainer = styled.div`
   border-radius: 24px;
   background-color: white;
   box-shadow: 0px 0px 32px 0px rgba(0, 0, 0, 0.10);
+
+  @media ${MEDIA_SIZES.tablet_544} {
+    width: 100%;
+    max-height: 100%;
+    height: calc(100% - 7.4rem);
+    border-radius: 0;
+  }
 `;
 
 export const LinksPreviewImageWrapper = styled.div`
@@ -44,6 +52,13 @@ export const LinksPreviewInfoWrapper = styled.div`
 `;
 
 export const LinksPreviewName = styled.h1`
+  overflow: hidden;
+  word-break: break-all;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
 `;
 
 export const LinksPreviewEmail = styled.span`
@@ -51,6 +66,14 @@ export const LinksPreviewEmail = styled.span`
 
   ${BodyM};
   color: var(--grey);
+
+  overflow: hidden;
+  word-break: break-all;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
 `;
 
 export const LinksPreviewList = styled.ul`
@@ -60,7 +83,8 @@ export const LinksPreviewList = styled.ul`
   overflow-y: auto;
 
   list-style: none;
-  width: 100%;
+  width: 50%;
+  min-width: 23.7rem;
 
   &::-webkit-scrollbar {
     width: 0px;

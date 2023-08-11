@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App.tsx'
 import { AuthProvider } from './context/auth-context.tsx';
 
-import { GlobalStyle } from './index.tsx'
+import { GlobalStyle } from './index.styles.tsx'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <BrowserRouter>

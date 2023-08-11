@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { BodyM, BodyS, ButtonSecondary } from '../..';
+import { BodyM, BodyS, ButtonSecondary } from '../../index.styles';
+import { MEDIA_SIZES } from '../../constants';
 
 export const ContentHeader = styled.div`
   margin-bottom: 4rem;
@@ -7,6 +8,14 @@ export const ContentHeader = styled.div`
   h1 {
     font-weight: 700;
     margin-bottom: 0.8rem;
+  }
+
+  @media (max-width: 71em) {
+    margin-bottom: 1.2rem;
+  }
+
+  @media ${MEDIA_SIZES.tablet_544} {
+    p { margin-bottom: 4rem; }
   }
 `;
 
@@ -17,16 +26,31 @@ export const ContentScrollable = styled.div`
   bottom: 0;
   overflow: auto;
   width: calc(100% - 8rem);
+
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+
+  @media ${MEDIA_SIZES.tablet_768} {
+    width: calc(100% - 4.8rem);
+  }
 `;
 
 //-------------LINKS-------------//
 export const AddLinkButton = styled(ButtonSecondary)`
   width: 100%;
-  margin-bottom: 2.4rem;
 `;
 
 export const LinkItemListWrapper = styled(ContentScrollable)`
   top: 22.6rem;
+
+  @media ${MEDIA_SIZES.laptop_928} {
+    top: 19rem;
+  }
+
+  @media ${MEDIA_SIZES.tablet_544} {
+    top: 22.6rem;
+  }
 `;
 
 export const LinkItemList = styled.ul`
@@ -45,31 +69,52 @@ export const ProfileScrollable = styled(ContentScrollable)`
 export const ProfilePictureSection = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
 
   margin-bottom: 2.4rem;
   padding: 2rem;
   border-radius: 12px;
   background-color: var(--light-grey);
+
+  @media ${MEDIA_SIZES.tablet_544} {
+    flex-direction: column;
+    align-items: start;
+  }
 `;
 
 export const ProfilePictureSectionLeft = styled.div`
+  flex-shrink: 0;
+  margin-right: 1.6rem;
+
   ${BodyM};
   color: var(--grey);
+
+  @media ${MEDIA_SIZES.tablet_544} {
+    margin-right: 0;
+    margin-bottom: 1.6rem;
+  }
 `;
 
 export const ProfilePictureSectionRight = styled.div`
-  gap: 2.4rem;
-  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: end;
 
-  label {
-    display: inline-block;
-    margin-right: 2.4rem;
-  }
+  gap: 2.4rem;
 
   input[type="file"] {
     width: 0;
     height: 0;
     opacity: 0;
+  }
+
+  @media ${MEDIA_SIZES.tablet_544} {
+    flex-direction: column;
+    align-items: start;
+    
+    span {
+      width: 100%;
+    }
   }
 `;
 
@@ -112,8 +157,7 @@ export const ProfilePictureUploadBox = styled.div<{ image: string }>`
 `;
 
 export const ProfilePictureUploadText = styled.span`
-  display: inline-block;
-  width: 21rem;
+  width: 36%;
 
   ${BodyS};
   color: var(--grey);

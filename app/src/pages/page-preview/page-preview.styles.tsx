@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { MEDIA_SIZES } from '../../constants';
 
 export const PagePreviewContainer = styled.div`
   display: flex;
@@ -12,6 +13,10 @@ export const PagePreviewContainer = styled.div`
   &.no-header {
     justify-content: center;
   }
+
+  @media ${MEDIA_SIZES.tablet_544} {
+    gap: 0;
+  }
 `;
 
 export const PagePreviewBackground = styled.div`
@@ -24,4 +29,8 @@ export const PagePreviewBackground = styled.div`
   height: 36.3%;
   border-radius: 0 0 32px 32px;
   background-color: var(--purple);
+
+  @media ${MEDIA_SIZES.tablet_544} {
+    background-color: white;
+  }
 `;

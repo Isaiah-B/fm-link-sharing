@@ -1,29 +1,32 @@
 import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/auth-context';
 
-import { HeaderContainer, HeaderLink } from './header.styles';
-import { ButtonPrimary, ButtonSecondary } from '../..';
+import { HeaderContainer, PreviewHeaderCenterButtons } from './header.styles';
+import { ButtonPrimary, ButtonSecondary } from '../../index.styles';
 
 export default function HeaderPreview({ handleShareLink }: { handleShareLink: () => void }) {
   const { user } = useContext(AuthContext);
 
+  const navigate = useNavigate();
+  
   return (
     <HeaderContainer>
-      <HeaderLink to={'/'}>
-        <ButtonSecondary>
+      <PreviewHeaderCenterButtons>
+        <ButtonSecondary onClick={() => navigate('/')}>
           Back to Editor
         </ButtonSecondary>
-      </HeaderLink>
-      
-      {
-        user.token
-          ? (
-            <ButtonPrimary onClick={handleShareLink}>
-              Share Link
-            </ButtonPrimary>
-          )
-          : null
-      }
+        
+        {
+          user.token
+            ? (
+              <ButtonPrimary onClick={handleShareLink}>
+                Share Link
+              </ButtonPrimary>
+            )
+            : null
+        }
+      </PreviewHeaderCenterButtons>
     </HeaderContainer>
   );
 }

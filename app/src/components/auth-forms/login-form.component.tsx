@@ -4,10 +4,11 @@ import { Link } from 'react-router-dom';
 import TextInput from '../text-input/text-input.component';
 import { ReactComponent as EmailIcon } from '../../assets/images/icon-email.svg';
 import { ReactComponent as PasswordIcon } from '../../assets/images/icon-password.svg';
-import { ButtonPrimary } from '../..';
+import { ButtonPrimary } from '../../index.styles';
+
+import useValidateForm from '../../hooks/useValidateForm';
 
 import { AuthCredentials } from '../../types';
-import useValidateForm from '../../hooks/useValidateForm';
 
 import {
   AuthFormContainer,

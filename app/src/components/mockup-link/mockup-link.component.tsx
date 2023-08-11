@@ -25,7 +25,7 @@ export default function MockupLink({ platform, isPreview = false }: MockupLinkPr
 
   if (isPreview) {
     return (
-      <MockupLinkPreviewContainer href={link}>
+      <MockupLinkPreviewContainer href={link || '#'}>
         <MockupLinkContainer
           style={{ backgroundColor: color }}
           className={bgWhite ? 'bg-white' : ''}

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { BodyM, BodyS } from '../..';
+import { BodyM, BodyS } from '../../index.styles';
 
 export const MockupLinkContainer = styled.div`
   display: flex;

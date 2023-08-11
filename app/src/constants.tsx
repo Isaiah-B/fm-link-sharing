@@ -116,4 +116,10 @@ export const LINK_SITES: StringIndex = {
     color: "hsl(29, 100%, 46%)",
     validation: /https:\/\/www\.stackoverflow\.com\/users\/\d+\/[\w\-]*/
   },
+};
+
+export const MEDIA_SIZES = {
+  laptop_928: '(max-width: 58em)',
+  tablet_768: '(max-width: 48em)',
+  tablet_544: '(max-width: 34em)',
 }

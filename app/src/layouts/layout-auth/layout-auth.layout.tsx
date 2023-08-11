@@ -2,7 +2,6 @@ import { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
 
 import { ReactComponent as LogoLarge } from '../../assets/images/logo-devlinks-large.svg'; 
-import { ReactComponent as LogoSmall } from '../../assets/images/logo-devlinks-small.svg';
 
 import { AuthContext } from '../../context/auth-context';
 

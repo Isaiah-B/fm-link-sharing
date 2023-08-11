@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { BodyS } from '../..';
+import { BodyS } from '../../index.styles';
+import { MEDIA_SIZES } from '../../constants';
 
 export const AuthFormContainer = styled.form`
   display: flex;
@@ -12,6 +13,11 @@ export const AuthFormContainer = styled.form`
   background-color: white;
   
   button { margin-bottom: 2.4rem; }
+  
+  @media ${MEDIA_SIZES.tablet_544} {
+    width: 100%;
+    padding: 0;
+  }
 `;
 
 export const AuthFormHeader = styled.div`
@@ -37,9 +43,14 @@ export const ErrorSection = styled.div`
 
 export const AuthNavigate = styled.div`
   align-self: center;
+  text-align: center;
 
   a {
     color: var(--purple);
     text-decoration: none;
-  }  
+  }
+
+  @media (max-width: 26em) {
+    width: 64%;
+  }
 `;

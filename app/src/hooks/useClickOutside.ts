@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'react';
 
 export default function useClickOutside(callback: () => void) {
-  const ref = useRef<HTMLElement | HTMLDivElement | null>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -10,9 +10,9 @@ export default function useClickOutside(callback: () => void) {
       }
     }
     
-    document.addEventListener('click', handleClickOutside);
+    document.addEventListener('mouseup', handleClickOutside);
 
-    return () => document.removeEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('mouseup', handleClickOutside);
   }, [ref, callback]);
 
   return ref;

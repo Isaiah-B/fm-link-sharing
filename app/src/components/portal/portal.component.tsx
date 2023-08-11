@@ -1,5 +1,4 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
-
 import { createPortal } from 'react-dom';
 
 interface PortalProps {
@@ -16,7 +15,8 @@ export const Portal = forwardRef<Ref, PortalProps>(({ children }: PortalProps, r
   wrapperEl.style.transition = 'all 2s';
 
   const [showComponent, setShowComponent] = useState(false);
-  
+  const [canFlash, setCanFlash] = useState(true);
+
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   
   useEffect(() => {
@@ -27,7 +27,11 @@ export const Portal = forwardRef<Ref, PortalProps>(({ children }: PortalProps, r
   }, [portalRoot, wrapperEl]);
 
   useImperativeHandle(ref, () => ({
+    // Mount and display child component for 2 seconds before fading it out and unmounting it
     flash() {
+      if (!canFlash) return;
+      
+      setCanFlash(false);
       setShowComponent(true);
 
       if (!wrapperRef.current) return;
@@ -45,10 +49,12 @@ export const Portal = forwardRef<Ref, PortalProps>(({ children }: PortalProps, r
             if (wrapperRef.current) {
               wrapperRef.current.style.removeProperty('opacity');
             }
+
+            setCanFlash(true);
           }, 2500);
         }
 
-      }, 2000); 
+      }, 2000);
     }
   }));
 

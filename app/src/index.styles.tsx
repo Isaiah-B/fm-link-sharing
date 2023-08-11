@@ -1,9 +1,10 @@
 import styled, { createGlobalStyle, css } from "styled-components";
+import { MEDIA_SIZES } from "./constants";
 
 export const BodyM = css`
   font-size: 1.6rem;
   font-weight: 400;
-  line-height: 150%;  
+  line-height: 150%;
 `;
 
 export const BodyS = css`
@@ -52,6 +53,10 @@ export const GlobalStyle = createGlobalStyle`
     font-size: 3.2rem;
     font-weight: 700;
     line-height: 150%;
+
+    @media ${MEDIA_SIZES.tablet_544} {
+      font-size: 2.4rem;
+    }
   }
 
   h2 {
@@ -85,7 +90,7 @@ export const ButtonBase = css`
   justify-content: center;
   gap: 0.8rem;
 
-  padding: 1rem 2.7rem;
+  padding: 1.1rem 2.7rem;
   border: none;
   border-radius: 8px;
   background: none;

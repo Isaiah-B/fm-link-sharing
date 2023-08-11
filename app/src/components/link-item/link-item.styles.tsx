@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { BodyM } from '../..';
+import { BodyM } from '../../index.styles';
 
 export const LinkItemContainer = styled.div`
   display: flex;

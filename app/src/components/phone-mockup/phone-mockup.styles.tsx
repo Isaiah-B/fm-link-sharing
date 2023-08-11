@@ -53,6 +53,11 @@ const MockupInfoText = css`
   width: 90%;
   background-color: white;
 
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+
   span {
     line-height: 150%;
   }

@@ -9,6 +9,7 @@ import LinksPreview from '../../components/links-preview/links-preview.component
 import { ReactComponent as LinkIcon } from '../../assets/images/icon-link-copied-to-clipboard.svg';
 
 import getUserData from '../../utils/getUserData';
+import useScreenWidth from '../../hooks/useScreenWidth';
 
 import { AuthContext } from '../../context/auth-context';
 import { MockupDataType } from '../../types';
@@ -22,11 +23,13 @@ import {
 export default function PagePreview() {
   const { id } = useParams();
   const { user } = useContext(AuthContext);
-  const [previewData, setPreviewData] = useState<MockupDataType>();
 
+  const [previewData, setPreviewData] = useState<MockupDataType>();
   const mockupState = useRecoilValue(MockupDataState);
 
   const portalRef = useRef<{ flash: () => void }>(null);
+
+  const screenWidth = useScreenWidth();
 
   const hasHeader = (id === user.id);
 
@@ -66,7 +69,7 @@ export default function PagePreview() {
   // navigating away from the papge
   if (user.isAnon) {
     window.onbeforeunload = () => {
-      return confirm("Refreshing the page will remove any changes you've made. Are you sure you want to refresh?")
+      return confirm();
     }
   }
 
@@ -88,7 +91,11 @@ export default function PagePreview() {
       <Portal ref={portalRef}>
         <Toast
           Icon={LinkIcon}
-          text='The link has been copied to your clipboard!'
+          text={
+            screenWidth > 420
+              ? 'The link has been copied to your clipboard!'
+              : 'The link has been copied!'
+          }
         />
       </Portal>
     </PagePreviewContainer>

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { MEDIA_SIZES } from '../../constants';
 
 export const LayoutMainContainer = styled.div`
   display: grid;
@@ -6,4 +7,13 @@ export const LayoutMainContainer = styled.div`
   gap: 2.4rem;
   
   flex-grow: 1;
+
+  @media ${MEDIA_SIZES.laptop_928} {
+    display: flex;
+    gap: 0;
+  }
+
+  @media ${MEDIA_SIZES.tablet_544} {
+    padding: 0 1.6rem 1.6rem 1.6rem;
+  }
 `;

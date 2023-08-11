@@ -5,7 +5,7 @@ interface ToastProps {
   text: string,
 }
 
-export default function Toast({ Icon, text }: ToastProps) {
+export default function Toast({ Icon, text }: ToastProps) {  
   return (
     <ToastContainer>
       {
