@@ -94,6 +94,12 @@ export default function SignupForm (
           &nbsp;
           <Link to="/login">Login</Link>
         </p>
+
+        <span>or</span>
+
+        <p>
+          <a href="/">Continue as guest</a>
+        </p>
       </AuthNavigate>
     </AuthFormContainer>
   );
