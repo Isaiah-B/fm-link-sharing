@@ -56,7 +56,6 @@ interface LinkItemProps {
 }
 
 export default function LinkItem({ index, platform, handleRemove }: LinkItemProps) {
-  console.log('render');
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const [mockupData, setMockupData] = useRecoilState(MockupDataState);
