@@ -13,6 +13,8 @@ export default function handleAuthErrors(error: unknown) {
         return 'User with this email and password was not found.';
       case 'auth/wrong-password':
         return 'Password is incorrect.';
+      case 'auth/email-already-in-use':
+        return 'A user with this email already exists.'
       default:
         return error.code; 
     }
