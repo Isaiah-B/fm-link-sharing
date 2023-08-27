@@ -77,9 +77,16 @@ export default function MainContentLinks() {
 
   // Move link to position in the array it was dragged to
   const handleDragEnd = (result: DropResult) => {
-    const { source, destination } = result;
+    const source = result.source;
+    let destination = result.destination;
+    
+    if (destination === null) {
+      destination = source;
+    }
+    
     const linksCopy = [...mockupState.links];
 
+    console.log(source, destination);
     const draggedLink = linksCopy.splice(source.index - 1, 1)[0];
 
     if (destination) {
