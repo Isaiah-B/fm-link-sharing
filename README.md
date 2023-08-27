@@ -24,8 +24,8 @@ It is designed responsively for device widths larger than 375px, and is best vie
 
 ### Links
 
-- [Solution]()
-- [Live Site]()
+- [Solution](https://www.frontendmentor.io/solutions/link-sharing-app-using-react-and-firebase-dUZUNlpkwO)
+- [Live Site](https://link-sharing-fm.netlify.app/)
 
 ### Built with
 
