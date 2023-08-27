@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { BodyM, ButtonBase, ButtonSecondary } from '../../index.styles';
 import { MEDIA_SIZES } from '../../constants';
 
-export const HeaderContainer = styled.div`
+export const HeaderContainer = styled.header`
   position: relative;
 
   display: flex;

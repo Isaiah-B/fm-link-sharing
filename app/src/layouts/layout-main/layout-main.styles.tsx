@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { MEDIA_SIZES } from '../../constants';
 
-export const LayoutMainContainer = styled.div`
+export const LayoutMainContainer = styled.main`
   display: grid;
   grid-template-columns: 0.416fr 0.6fr;
   gap: 2.4rem;
