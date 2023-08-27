@@ -86,7 +86,6 @@ export default function MainContentLinks() {
     
     const linksCopy = [...mockupState.links];
 
-    console.log(source, destination);
     const draggedLink = linksCopy.splice(source.index - 1, 1)[0];
 
     if (destination) {
