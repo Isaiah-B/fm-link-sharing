@@ -89,10 +89,14 @@ export const HeaderMenuButton = styled.button`
   justify-content: center;
 
   padding: 0.8rem !important;
-  background: none;
+  background: white;
   border: none;
 
-  cursor: pointer; 
+  cursor: pointer;
+
+  &.tutorial-highlight {
+    z-index: 9999;
+  }
 `;
 
 export const HeaderMenu = styled.div`

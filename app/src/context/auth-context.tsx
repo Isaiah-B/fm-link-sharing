@@ -112,6 +112,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       });
 
       cookies.set('id', anonId);
+      cookies.set('tutorial', '0');
     }
   };
 

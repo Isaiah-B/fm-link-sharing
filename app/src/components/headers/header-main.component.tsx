@@ -3,6 +3,8 @@ import { useRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 
+import InstructionOverlay from "../instruction-overlay/instruction-overlay.component";
+
 import { ReactComponent as LogoLarge } from '../../assets/images/logo-devlinks-large.svg';
 import { ReactComponent as LogoSmall } from '../../assets/images/logo-devlinks-small.svg';
 import { ReactComponent as LinkIcon } from '../../assets/images/icon-link.svg';
@@ -40,6 +42,8 @@ export default function HeaderMain() {
   const screenWidth = useScreenWidth();
   const clickOutsideRef = useClickOutside(() => setMenuOpen(false));
 
+  const tutorialOpen = cookies.get('tutorial') === '0' ? true : false;
+
   const logoutUser = () => {
     cookies.remove('token');
     cookies.remove('id');
@@ -48,64 +52,83 @@ export default function HeaderMain() {
     navigate('/login');
   };
 
+  const onClickHeaderMenu = () => {
+    setMenuOpen(!menuOpen);
+
+    if (tutorialOpen) {
+      cookies.set('tutorial', '1');
+    }
+  }
+
   return (
-    <HeaderContainer className={menuOpen ? 'menu-open' : ''}>
-      <HeaderLogoWrapper>
-        {
-          screenWidth > 544
-            ? <LogoLarge />
-            : <LogoSmall />
-        }
-      </HeaderLogoWrapper>
-
-      <HeaderNav>
-        <HeaderTab
-          className={pageState === 'links' ? 'selected' : ''}
-          onClick={() => setPageState('links')}
-        >
-          <LinkIcon />
-          <span>Links</span>
-        </HeaderTab>
-
-        <HeaderTab
-          className={pageState === 'profile' ? 'selected' : ''}
-          onClick={() => setPageState('profile')}
-        >
-          <ProfileDetailsIcon />
-          <span>Profile Details</span>
-        </HeaderTab>
-      </HeaderNav>
-
-      <HeaderRight>
-        <HeaderPreviewButton onClick={() => navigate(`/preview/${user.id}`)}>
+    <>
+      <HeaderContainer className={menuOpen ? 'menu-open' : ''}>
+        <HeaderLogoWrapper>
           {
-            screenWidth <= 768
-              ? <PreviewMobileIcon />
-              : <span>Preview</span>
+            screenWidth > 544
+              ? <LogoLarge />
+              : <LogoSmall />
           }
-        </HeaderPreviewButton>
+        </HeaderLogoWrapper>
 
-        <HeaderMenuButton onClick={() => setMenuOpen(!menuOpen)}>
-          <VerticalEllipsis />
-        </HeaderMenuButton>
+        <HeaderNav>
+          <HeaderTab
+            className={pageState === 'links' ? 'selected' : ''}
+            onClick={() => setPageState('links')}
+          >
+            <LinkIcon />
+            <span>Links</span>
+          </HeaderTab>
 
-        <HeaderMenu ref={clickOutsideRef}>
-          {
-            user.token
-              ? (
-                  <HeaderAuthButton onClick={logoutUser}>
-                    Logout
-                  </HeaderAuthButton>
-              )
+          <HeaderTab
+            className={pageState === 'profile' ? 'selected' : ''}
+            onClick={() => setPageState('profile')}
+          >
+            <ProfileDetailsIcon />
+            <span>Profile Details</span>
+          </HeaderTab>
+        </HeaderNav>
 
-              : (
-                  <HeaderAuthButton onClick={() => navigate('/signup')}>
-                    Sign up
-                  </HeaderAuthButton>
-              )
-          }
-        </HeaderMenu>
-      </HeaderRight>
-    </HeaderContainer>
+        <HeaderRight>
+          <HeaderPreviewButton onClick={() => navigate(`/preview/${user.id}`)}>
+            {
+              screenWidth <= 768
+                ? <PreviewMobileIcon />
+                : <span>Preview</span>
+            }
+          </HeaderPreviewButton>
+
+          <HeaderMenuButton
+            onClick={onClickHeaderMenu}
+            className={`${tutorialOpen ? 'tutorial-highlight' : ''}`}
+          >
+            <VerticalEllipsis />
+          </HeaderMenuButton>
+
+          <HeaderMenu ref={clickOutsideRef}>
+            {
+              user.token
+                ? (
+                    <HeaderAuthButton onClick={logoutUser}>
+                      Logout
+                    </HeaderAuthButton>
+                )
+
+                : (
+                    <HeaderAuthButton onClick={() => navigate('/signup')}>
+                      Sign up
+                    </HeaderAuthButton>
+                )
+            }
+          </HeaderMenu>
+        </HeaderRight>
+      </HeaderContainer>
+
+      {
+        tutorialOpen
+          ? <InstructionOverlay />
+          : null
+      }
+    </>
   )
 }
